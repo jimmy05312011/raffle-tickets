@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>抽獎券查詢</title>
+    <script>
+      // 當頁面加載時，如果 URL 中有 seat 參數，則執行查詢
+      window.onload = function () {
+        const params = new URLSearchParams(window.location.search);
+        const seat = params.get("seat");
+
+        if (seat) {
+          fetchResults(seat); // 如果有座號，執行查詢
+        }
+      };
+
+      // 更新 URL 並查詢結果
+      function updateURL() {
+        const seat = document.getElementById("seat").value;
+        if (seat) {
+          const formattedSeat = seat.padStart(2, '0'); // 格式化座號為兩位數
+          window.history.pushState({}, "", `?seat=${formattedSeat}`); // 更新網址
+          fetchResults(formattedSeat); // 查詢結果
+        }
+      }
+
+      // 查詢座號的抽獎券數量
+      function fetchResults(seat) {
+        const url = `https://script.google.com/macros/s/AKfycbzJ1zkJhsoO7gGbQ_12345/edit?seat=${seat}`;
+        fetch(url)
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById('result').innerHTML = data;
+          });
+      }
+    </script>
+  </head>
+  <body>
+    <h2>抽獎券查詢</h2>
+    <form id="seatForm">
+      <label for="seat">請輸入座號：</label>
+      <input type="text" id="seat" placeholder="例如 01 或 02" required>
+      <button type="button" onclick="updateURL()">查詢</button>
+    </form>
+
+    <div id="result"></div> <!-- 顯示查詢結果 -->
+  </body>
+</html>
