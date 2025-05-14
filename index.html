@@ -17,8 +17,11 @@
     button {
       padding: 0.5rem 1rem;
       font-size: 1rem;
-      margin-left: 0.5rem;
+      margin: 0.5rem;
       cursor: pointer;
+    }
+    #buttons {
+      margin-top: 1rem;
     }
   </style>
 </head>
@@ -29,16 +32,49 @@
     <button type="submit">查詢</button>
   </form>
 
+  <div id="buttons" style="display:none;">
+    <button onclick="showTicket('first')">第一次進步獎</button>
+    <button onclick="showTicket('second')">第二次進步獎</button>
+  </div>
+  <p id="result"></p>
+
   <script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzUhZvL0E0RnpLkLVexA6JzmHjlm2XAoa5YQr1O_kPrA9knOoMlq-M7rhm6TepTevuSQA/exec";
+
+    let ticketData = {};
+
     document.getElementById('seatForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const seat = document.getElementById('seatInput').value.trim().padStart(2, '0');
-      if (seat) {
-        // 將網址導向自己加上 seat=XX
-        window.location.href = window.location.origin + window.location.pathname + "?seat=" + seat;
-      }
+      if (!seat) return;
+
+      fetch(GAS_URL + "?seat=" + seat)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            ticketData = data;
+            document.getElementById('buttons').style.display = 'block';
+            document.getElementById('result').innerText = '請選擇要查詢的進步獎';
+          } else {
+            document.getElementById('result').innerText = '查無資料，請確認座號是否正確';
+            document.getElementById('buttons').style.display = 'none';
+          }
+        })
+        .catch(() => {
+          document.getElementById('result').innerText = '伺服器錯誤，請稍後再試';
+          document.getElementById('buttons').style.display = 'none';
+        });
     });
+
+    function showTicket(type) {
+      let text = '';
+      if (type === 'first') {
+        text = `第一次進步獎抽獎券數量：${ticketData.first} 張`;
+      } else if (type === 'second') {
+        text = `第二次進步獎抽獎券數量：${ticketData.second} 張`;
+      }
+      document.getElementById('result').innerText = text;
+    }
   </script>
 </body>
 </html>
-
