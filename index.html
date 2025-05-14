@@ -35,6 +35,9 @@
   <div id="buttons" style="display:none;">
     <button onclick="showTicket('first')">第一次進步獎</button>
     <button onclick="showTicket('second')">第二次進步獎</button>
+    <button onclick="showTicket('third')">第三次進步獎</button>
+    <button onclick="showTicket('fourth')">第四次進步獎</button>
+    <button onclick="showTicket('fifth')">第五次進步獎</button>
   </div>
   <p id="result"></p>
 
@@ -72,6 +75,12 @@
         text = `第一次進步獎抽獎券數量：${ticketData.first} 張`;
       } else if (type === 'second') {
         text = `第二次進步獎抽獎券數量：${ticketData.second} 張`;
+      } else if (type === 'third') {
+        text = `第三次進步獎抽獎券數量：${ticketData.third} 張`;
+      } else if (type === 'fourth') {
+        text = `第四次進步獎抽獎券數量：${ticketData.fourth} 張`;
+      } else if (type === 'fifth') {
+        text = `第五次進步獎抽獎券數量：${ticketData.fifth} 張`;
       }
       document.getElementById('result').innerText = text;
     }
