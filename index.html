@@ -1,47 +1,44 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>抽獎券查詢</title>
-    <script>
-      // 當頁面加載時，如果 URL 中有 seat 參數，則執行查詢
-      window.onload = function () {
-        const params = new URLSearchParams(window.location.search);
-        const seat = params.get("seat");
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>抽獎券查詢</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      text-align: center;
+    }
+    input[type="text"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>請輸入座號查詢抽獎券</h2>
+  <form id="seatForm">
+    <input type="text" id="seatInput" placeholder="例如 01" required />
+    <button type="submit">查詢</button>
+  </form>
 
-        if (seat) {
-          fetchResults(seat); // 如果有座號，執行查詢
-        }
-      };
-
-      // 更新 URL 並查詢結果
-      function updateURL() {
-        const seat = document.getElementById("seat").value;
-        if (seat) {
-          const formattedSeat = seat.padStart(2, '0'); // 格式化座號為兩位數
-          window.history.pushState({}, "", `?seat=${formattedSeat}`); // 更新網址
-          fetchResults(formattedSeat); // 查詢結果
-        }
+  <script>
+    document.getElementById('seatForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const seat = document.getElementById('seatInput').value.trim().padStart(2, '0');
+      if (seat) {
+        // 將網址導向自己加上 seat=XX
+        window.location.href = window.location.origin + window.location.pathname + "?seat=" + seat;
       }
-
-      // 查詢座號的抽獎券數量
-      function fetchResults(seat) {
-        const url = `https://script.google.com/macros/s/AKfycbzJ1zkJhsoO7gGbQ_12345/edit?seat=${seat}`;
-        fetch(url)
-          .then((response) => response.text())
-          .then((data) => {
-            document.getElementById('result').innerHTML = data;
-          });
-      }
-    </script>
-  </head>
-  <body>
-    <h2>抽獎券查詢</h2>
-    <form id="seatForm">
-      <label for="seat">請輸入座號：</label>
-      <input type="text" id="seat" placeholder="例如 01 或 02" required>
-      <button type="button" onclick="updateURL()">查詢</button>
-    </form>
-
-    <div id="result"></div> <!-- 顯示查詢結果 -->
-  </body>
+    });
+  </script>
+</body>
 </html>
+
